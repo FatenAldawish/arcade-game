@@ -22,4 +22,4 @@ In this game you have a Player and Enemies (bugs). The goal of the player is to 
 - Clone the repository
 - Uncompress arcade-game.zip file
 - Double click on index.html file
-- Start playing and don't forget to read [the game rule] (#About-The-Game)
+- Start playing and don't forget to read [the game rule](#About-The-Game)
