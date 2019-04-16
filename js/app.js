@@ -164,9 +164,9 @@ let score = 0;
 let gameLevel = 1;
 let scoreLevelDiv = document.getElementById("game-status");
 let gameOverCount = 0;
-let errorSound = new sound("js/bounce.mp3");
-let winSound = new sound("js/Ta Da.mp3");
-let newLevelSound = new sound("js/Decapitation.mp3");
+let errorSound = new sound("sounds/bounce.mp3");
+let winSound = new sound("sounds/Ta Da.mp3");
+let newLevelSound = new sound("sounds/Decapitation.mp3");
 let lives = document.querySelectorAll('li');
 
 // add sound effect to the game, reference: 'https://www.w3schools.com/graphics/game_sound.asp'
