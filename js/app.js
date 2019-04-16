@@ -72,8 +72,7 @@ Player.prototype.handleInput = function(keyPress) {
 // Function to display player's score
 var displayScoreLevel = function(aScore, aLevel) {
     // add player score and level to div element
-    scoreLevelDiv.innerHTML = 'Score: ' + aScore
-        + ' - ' + 'Level: ' + aLevel + '/40' ;
+    scoreLevelDiv.innerHTML = 'Score: ' + aScore + ' - ' + 'Level: ' + aLevel + '/20' ;
 };
 
 var checkCollision = function(anEnemy) {
@@ -83,16 +82,27 @@ var checkCollision = function(anEnemy) {
         && player.x + 25 <= anEnemy.x + 88
         && player.y + 73 <= anEnemy.y + 135
         && player.x + 76 >= anEnemy.x + 11) {
-        console.log('collided');
+        errorSound.play();
         player.x = 202.5;
         player.y = 383;
-        gameOverCount--;
-        if (gameOverCount===0){
-          // freze the screen by disable keys listener and remove enemies
-          // add some CSS effect
-          document.removeEventListener('keydown', keysListener );
+
+        // decrease number of lives
+        lives[gameOverCount].classList.remove("fa","fa-heart");
+        lives[gameOverCount].classList.add("fa","fa-heart-o");
+        gameOverCount++;
+
+        // if the game is over, freze the screen by disable keys listener and remove enemies
+        if (gameOverCount===3){
+
           allEnemies.length = 0;
-        }
+           if(confirm('Game Over :(!!\nDo you want to try again?'))
+           {
+             window.location.reload();
+           }else{
+             // if the user press cancel then disable the screen
+            document.removeEventListener('keydown', keysListener );
+           }
+         }
     }
 
     // check for player reaching top of canvas and winning the game
@@ -101,19 +111,20 @@ var checkCollision = function(anEnemy) {
     if (player.y + 63 <= 0) {
         player.x = 202.5;
         player.y = 383;
-        console.log('you made it!');
 
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, 505, 171);
 
-        if (gameLevel === 40)
+        if (gameLevel === 20)
         {
-          
+          winSound.play();
+          alert("YOU WIN, CONGRATULATIONS 🎉🎉!");
+
         }
 
         score += 3;
         gameLevel += 1;
-        console.log('current score: ' + score + ', current level: ' + gameLevel);
+        newLevelSound.play();
         increaseDifficulty(score);
     }
 
@@ -146,14 +157,35 @@ var increaseDifficulty = function(numEnemies) {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 // Enemy randomly placed vertically within section of canvas
-// Declare new score and gameLevel variables to store score and level
-var allEnemies = [];
-var player = new Player(202.5, 383, 50);
-var score = 0;
-var gameLevel = 1;
-var scoreLevelDiv = document.getElementById("game-status");
-var gameOverCount = 4;
+// Declare new score , gameLevel , sounds and lives variables
+let allEnemies = [];
+let player = new Player(202.5, 383, 50);
+let score = 0;
+let gameLevel = 1;
+let scoreLevelDiv = document.getElementById("game-status");
+let gameOverCount = 0;
+let errorSound = new sound("js/bounce.mp3");
+let winSound = new sound("js/Ta Da.mp3");
+let newLevelSound = new sound("js/Decapitation.mp3");
+let lives = document.querySelectorAll('li');
 
+// add sound effect to the game, reference: 'https://www.w3schools.com/graphics/game_sound.asp'
+function sound(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+        this.sound.play();
+    }
+    this.stop = function(){
+        this.sound.pause();
+    }
+}
+
+// create initial enemies
 for (var i = 0; i < 2; i++) {
   var enemy = new Enemy(0, Math.random() * 184 + 50, Math.random() * 256);
   allEnemies.push(enemy);
@@ -173,5 +205,4 @@ function keysListener(e) {
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
-    console.log(allowedKeys[e.keyCode]);
 }
