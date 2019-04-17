@@ -25,7 +25,7 @@ Enemy.prototype.update = function(dt) {
     }
 
     // Check for collision with enemies or barrier-walls
-    checkCollision(this);
+     this.checkCollision();
 };
 
 // Draw the enemy on the screen, required method for game
@@ -55,18 +55,17 @@ Player.prototype.render = function() {
 
 Player.prototype.handleInput = function(keyPress) {
     if (keyPress == 'left') {
-        player.x -= player.speed;
+        this.x -= this.speed;
     }
     if (keyPress == 'up') {
-        player.y -= player.speed - 20;
+        this.y -= this.speed - 20;
     }
     if (keyPress == 'right') {
-        player.x += player.speed;
+        this.x += this.speed;
     }
     if (keyPress == 'down') {
-        player.y += player.speed - 20;
+        this.y += this.speed - 20;
     }
-    console.log('keyPress is: ' + keyPress);
 };
 
 // Function to display player's score
@@ -75,13 +74,13 @@ var displayScoreLevel = function(aScore, aLevel) {
     scoreLevelDiv.innerHTML = 'Score: ' + aScore + ' - ' + 'Level: ' + aLevel + '/20' ;
 };
 
-var checkCollision = function(anEnemy) {
+Enemy.prototype.checkCollision = function () {
     // check for collision between enemy and player
     if (
-        player.y + 131 >= anEnemy.y + 90
-        && player.x + 25 <= anEnemy.x + 88
-        && player.y + 73 <= anEnemy.y + 135
-        && player.x + 76 >= anEnemy.x + 11) {
+        player.y + 131 >= this.y + 90
+        && player.x + 25 <= this.x + 88
+        && player.y + 73 <= this.y + 135
+        && player.x + 76 >= this.x + 11) {
         errorSound.play();
         player.x = 202.5;
         player.y = 383;
